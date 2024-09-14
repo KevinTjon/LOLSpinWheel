@@ -11,5 +11,5 @@ venv/
 env/
 .DS_Store
 
-riot_api_key.txt
+riot_api_key.py
 
