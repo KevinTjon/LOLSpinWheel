@@ -12,4 +12,4 @@ env/
 .DS_Store
 
 riot_api_key.py
-
+champion_data.json

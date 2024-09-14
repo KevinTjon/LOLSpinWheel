@@ -31,9 +31,3 @@ def get_mastery_score(puuid):
     
     return champion_ids
 
-response = get_summoner_puuid(gameName, tagLine)
-puuid = response['puuid']
-#print(puuid)
-mastery_score = get_mastery_score(puuid)
-print(mastery_score)
-
