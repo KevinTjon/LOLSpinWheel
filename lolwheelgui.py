@@ -1,14 +1,30 @@
 import PySimpleGUI as sg
 import base64
+import json
 
+def load_champion_data():
+    #champ_list = []
+    with open('champion_data.json', 'r') as file:
+        data = json.load(file)
+        #takes the champion_data.json and parses it through champ id, returning name 
+        champ_list = {str(champ_id): data[champ_id]['name'] for champ_id in data} 
+    return champ_list
 
-champion_list = ["aatrox","ivern"]
+def get_champ_data():
+    champ_list = load_champion_data()
+    # returns only the champ names and removes its id
+    return [champ_list.get(str(champ_id), (f"Unknown Champ({champ_id})")) for champ_id in champ_list]
+
+champion_list = get_champ_data()
+print(champion_list)
+
+#champion_list = ["aatrox","ivern"]
 
 
 # takes in champion name in lowercase
 # returns base64 encoded image
 def card_load(champion_name_lowercase):
-    image_file = f"champion_assets/{champion_name_lowercase}_loading.png"
+    image_file = f"Assets/{champion_name_lowercase.lower()}/skins/base/{champion_name_lowercase.lower()}loadscreen.png"
 
     #rb is binary mode, we need this to convert to base 64 ideally
     with open(image_file,"rb") as opened_file:
