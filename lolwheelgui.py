@@ -25,6 +25,7 @@ print(champion_list)
 # returns base64 encoded image
 def card_load(champion_name_lowercase):
     image_file = f"Assets/{champion_name_lowercase.lower()}/skins/base/{champion_name_lowercase.lower()}loadscreen.png"
+    #image_file = f"champion_assets/{champion_name_lowercase.lower()}_loading.png"
 
     #rb is binary mode, we need this to convert to base 64 ideally
     with open(image_file,"rb") as opened_file:
@@ -99,7 +100,7 @@ while True:
         window[f"-slot2_champion_image-"].update(card_load("mystery"))
         window[f"-slot2_champion_name-"].update("?")
 
-        champion_list = champion_list[2:]
+        champion_list = champion_list[5:]
         next_reveal=0
         print("samoyed")
     if event == 'Reveal':

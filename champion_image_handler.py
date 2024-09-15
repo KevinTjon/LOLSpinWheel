@@ -9,7 +9,7 @@ def find_champion_image_path(champion_name):
             base_path = os.path.join(folder_path, 'skins', 'base')
             if os.path.exists(base_path):
                 for file in os.listdir(base_path):
-                    if file.startswith(champion_name.lower()) and file.lower().endswith('loadscreen.jpg'):
+                    if file.startswith(champion_name.lower()) and file.lower().endswith('loadscreen.png'):
                         image_path = os.path.join(base_path, file)
                         return image_path
     print(f"Image not found for {champion_name}")
