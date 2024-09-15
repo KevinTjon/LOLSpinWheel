@@ -18,6 +18,20 @@ def player_champion_list(mastery_score):
     
     player_champs = {}
     for champ_id, champ_name in zip(mastery_score, champion_names):
+        #edge cases becuase of unconventional names
+        name_mappings = {
+            'Aurelion Sol': 'Aurelionsol',
+            "K'Sante": 'Ksante',
+            "Kha'Zix": 'Khazix',
+            "Jarvan IV": 'Jarvaniv',
+            "Master Yi": 'Masteryi',
+            "Kai'Sa": 'Kaisa',
+            "Lee Sin": 'Leesin',
+            "Dr. Mundo": 'Drmundo',
+            "Twisted Fate": 'twistedfate'
+        }
+        champ_name = name_mappings.get(champ_name, champ_name)
+        
         player_champs[str(champ_id)] = {
             "name": champ_name,
             "image_path": image_paths.get(champ_name, None)
