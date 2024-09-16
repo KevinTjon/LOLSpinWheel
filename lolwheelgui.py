@@ -64,21 +64,21 @@ def update_slots(sliced_champ_array):
 # makes all slots revert to mystery image and mystery name
 # takes in no parameters
 # returns nothing
-def unflip_slots():
+def reset_cards():
     mystery_array = ['mystery'] *5
     update_slots(mystery_array)
 
 # setup the five slots
 
-slot1 = [card_load("mystery"), "?"]
+slot1 = [card_load("mystery"), "mystery"]
 
-slot2 = [card_load("mystery"), "?"]
+slot2 = [card_load("mystery"), "mystery"]
 
-slot3 = [card_load("mystery"), "?"]
+slot3 = [card_load("mystery"), "mystery"]
 
-slot4 = [card_load("mystery"), "?"]
+slot4 = [card_load("mystery"), "mystery"]
 
-slot5 = [card_load("mystery"), "?"]
+slot5 = [card_load("mystery"), "mystery"]
 
 
 # slot variable:
@@ -111,48 +111,68 @@ input_layout = [    [sg.Text("Summoner Name: "), sg.InputText(key='-GAME_NAME-')
 layout = [  [sg.Column(input_layout)],
             [sg.Image(slot1[0], key="-slot1_champion_image-"), sg.Image(slot2[0], key="-slot2_champion_image-"), sg.Image(slot3[0], key="-slot3_champion_image-"), sg.Image(slot4[0], key="-slot4_champion_image-"), sg.Image(slot5[0], key="-slot5_champion_image-")],
             [sg.Text(slot1[1] ,key='-slot1_champion_name-'), sg.Text(slot2[1] ,key='-slot2_champion_name-'), sg.Text(slot3[1] ,key='-slot3_champion_name-'), sg.Text(slot4[1] ,key='-slot4_champion_name-'), sg.Text(slot5[1] ,key='-slot5_champion_name-')],
-            [sg.Button('Reveal', visible=False), sg.Button('Shuffle', key='shuffle_button')],
-            [sg.Button('Ok')] ]
+            [sg.Button('Reveal', visible=False)],
+            [sg.Button('Shuffle', key='shuffle_button', visible=False)],
+            [sg.Button('Exit')] ]
 
 
 # Create the Window
 window = sg.Window('Window Title', layout)
 
+saved_role = "Top"
+
 next_reveal= 0
 # Event Loop to process "events" and get the "values" of the inputs
 while True:
     event, values = window.read()
-    if event == sg.WIN_CLOSED or event == 'Ok': # if user closes window or clicks cancel
+    if event == sg.WIN_CLOSED or event == 'Exit': # if user closes window or clicks cancel
         break
+    if champion_list == None or champion_list == []:
+        window['Reveal'].Update(visible=False)
+    else:
+        window['Reveal'].Update(visible=True)
     if event == 'Submit':
+        reset_cards() # flips cards back to mystery state
+        
+        next_reveal = 0
         game_name = values['-GAME_NAME-']
         tag_line = values['-TAG_LINE-']
         role = values['-ROLE-'].lower()
         main(game_name,tag_line,role)
         champion_list = (get_champ_data())
-        #update_slots(champion_list[0:5])
-        window['Reveal'].Update(visible=True)
         
-    if next_reveal>=2: # logic for showing the shuffle button
+        #update_slots(champion_list[0:5])
+        
+        
+        
+    if next_reveal==1: # logic for showing the shuffle button
+        window['shuffle_button'].update(visible = True)
+    else:
         window['shuffle_button'].update(visible = False)
-    if event == 'shuffle_button' and next_reveal<3: # can only shuffle if see less than 3
-        print("next reveal",next_reveal)
-        window[f"-slot1_champion_image-"].update(card_load("mystery"))
-        window[f"-slot1_champion_name-"].update("?")
+    if event == 'shuffle_button' : # can only shuffle if see less than 3
+        if len(champion_list)<=10:
+            print("<!> not enough champions to shuffle")
+        else:
+            print("moving up to next 5 champs in the list")
+            window[f"-slot1_champion_image-"].update(card_load("mystery"))
+            window[f"-slot1_champion_name-"].update("?")
+    
+            window[f"-slot2_champion_image-"].update(card_load("mystery"))
+            window[f"-slot2_champion_name-"].update("?")
 
-        window[f"-slot2_champion_image-"].update(card_load("mystery"))
-        window[f"-slot2_champion_name-"].update("?")
-
-        champion_list = champion_list[5:]
-        next_reveal=0
-        print("samoyed")
+            champion_list = champion_list[5:]
+            next_reveal=0
     if event == 'Reveal':
         print(champion_list[next_reveal])
         next_card_base64 = card_load(champion_list[next_reveal])
         next_card_name = champion_list[next_reveal]
         window[f"-slot{next_reveal+1}_champion_image-"].update(next_card_base64)
-        window[f"-slot{next_reveal+1}_champion_name-"].update(next_card_name) 
+        window[f"-slot{next_reveal+1}_champion_name-"].update(next_card_name)
+        if next_reveal+1==5:
+            window["Reveal"].update(visible=False) 
+        print("<#> Remaining champions:", len(champion_list)-next_reveal)
         next_reveal = (next_reveal+1)%5
+        
     
 
 window.close()
