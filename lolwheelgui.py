@@ -118,7 +118,8 @@ layout = [  [sg.Column(input_layout)],
 
 
 # Create the Window
-window = sg.Window('Window Title', layout)
+window = sg.Window('Window Title', layout, resizable=True).Finalize()
+#window.Maximize()
 
 saved_role = "Top"
 
