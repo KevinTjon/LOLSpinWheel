@@ -2,10 +2,25 @@ import PySimpleGUI as sg
 import base64
 import json
 import random
+import os
 
 from logic import main
 
 def load_champion_data():
+    # creates a default data for the slots if the json file is not found
+    default_data = {
+        "0": {
+            "name": "None",
+            "image_path": "Assets/None/skins/base/mysteryloadscreen.png"
+        }
+    }
+
+    # creates a json file if it doesn't exist
+    if not os.path.exists('champion_data.json'):
+        with open('champion_data.json', 'w') as file:
+            json.dump(default_data, file)
+        
+
     #champ_list = []
     with open('champion_data.json', 'r') as file:
         data = json.load(file)
@@ -120,6 +135,8 @@ layout = [  [sg.Column(input_layout)],
 # Create the Window
 window = sg.Window('Window Title', layout, resizable=True).Finalize()
 #window.Maximize()
+
+
 
 saved_role = "Top"
 
