@@ -122,6 +122,7 @@ while True:
         tag_line = values['-TAG_LINE-']
         role = values['-ROLE-'].lower()
         main(game_name,tag_line,role)
+        champion_list = (get_champ_data())
         #update_slots(champion_list[0:5])
         
     if next_reveal>=2:

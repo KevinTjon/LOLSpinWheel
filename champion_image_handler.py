@@ -28,7 +28,8 @@ def get_champion_image_paths(champion_names):
             "Kai'Sa": 'Kaisa',
             "Lee Sin": 'Leesin',
             "Dr. Mundo": 'Drmundo',
-            "Twisted Fate": 'twistedfate'
+            "Twisted Fate": 'twistedfate',
+            'Tahm Kench ': 'tahmkench',
         }
         # Use the mapping if it exists, otherwise keep the original name
         name = name_mappings.get(name, name)
