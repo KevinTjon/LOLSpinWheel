@@ -44,13 +44,22 @@ def card_load(champion_name_lowercase):
     #now image should be readable by pysimplegui
 
 
-def update_slots(champ1,champ2,champ3,champ4,champ5):
+# takes in an array of 5 elements
+# updates the slots
+# returns nothing
+def update_slots(sliced_champ_array):
+    if len(sliced_champ_array)>5:
+        print("sliced array greater than size 5")
+        print("Exiting...")
+        exit()
+    for slot_index in range(0,5):
+
+        champ_card_base64 = card_load(sliced_champ_array[slot_index])
+        champion_name = sliced_champ_array[slot_index]
+        window[f"-slot{slot_index+1}_champion_image-"].update(champ_card_base64)
+        window[f"-slot{slot_index+1}_champion_name-"].update(champion_name)
     
-    champ_card_base64 = card_load(champion_list[next_reveal])
-    champ_card = champion_list[next_reveal]
-    window[f"-slot{next_reveal+1}_champion_image-"].update(next_card_base64)
-    window[f"-slot{next_reveal+1}_champion_name-"].update(next_card_name)
-    
+    return
     
 # setup the five slots
 
@@ -113,6 +122,7 @@ while True:
         tag_line = values['-TAG_LINE-']
         role = values['-ROLE-'].lower()
         main(game_name,tag_line,role)
+        #update_slots(champion_list[0:5])
         
     if next_reveal>=2:
         window['shuffle_button'].update(visible = False)
@@ -128,6 +138,7 @@ while True:
         next_reveal=0
         print("samoyed")
     if event == 'Reveal':
+        print(champion_list[next_reveal])
         next_card_base64 = card_load(champion_list[next_reveal])
         next_card_name = champion_list[next_reveal]
         window[f"-slot{next_reveal+1}_champion_image-"].update(next_card_base64)
