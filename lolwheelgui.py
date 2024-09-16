@@ -44,8 +44,8 @@ def card_load(champion_name_lowercase):
     #now image should be readable by pysimplegui
 
 
-# takes in an array of 5 elements
-# updates the slots
+# takes in an array of 5 elements (champion names) ex: ["Aatrox",...]
+# updates the corresponding slots with each element
 # returns nothing
 def update_slots(sliced_champ_array):
     if len(sliced_champ_array)>5:
@@ -60,7 +60,14 @@ def update_slots(sliced_champ_array):
         window[f"-slot{slot_index+1}_champion_name-"].update(champion_name)
     
     return
-    
+
+# makes all slots revert to mystery image and mystery name
+# takes in no parameters
+# returns nothing
+def unflip_slots():
+    mystery_array = ['mystery'] *5
+    update_slots(mystery_array)
+
 # setup the five slots
 
 slot1 = [card_load("mystery"), "?"]
@@ -104,7 +111,7 @@ input_layout = [    [sg.Text("Summoner Name: "), sg.InputText(key='-GAME_NAME-')
 layout = [  [sg.Column(input_layout)],
             [sg.Image(slot1[0], key="-slot1_champion_image-"), sg.Image(slot2[0], key="-slot2_champion_image-"), sg.Image(slot3[0], key="-slot3_champion_image-"), sg.Image(slot4[0], key="-slot4_champion_image-"), sg.Image(slot5[0], key="-slot5_champion_image-")],
             [sg.Text(slot1[1] ,key='-slot1_champion_name-'), sg.Text(slot2[1] ,key='-slot2_champion_name-'), sg.Text(slot3[1] ,key='-slot3_champion_name-'), sg.Text(slot4[1] ,key='-slot4_champion_name-'), sg.Text(slot5[1] ,key='-slot5_champion_name-')],
-            [sg.Button('Reveal'), sg.Button('Shuffle', key='shuffle_button')],
+            [sg.Button('Reveal', visible=False), sg.Button('Shuffle', key='shuffle_button')],
             [sg.Button('Ok')] ]
 
 
@@ -124,8 +131,9 @@ while True:
         main(game_name,tag_line,role)
         champion_list = (get_champ_data())
         #update_slots(champion_list[0:5])
+        window['Reveal'].Update(visible=True)
         
-    if next_reveal>=2:
+    if next_reveal>=2: # logic for showing the shuffle button
         window['shuffle_button'].update(visible = False)
     if event == 'shuffle_button' and next_reveal<3: # can only shuffle if see less than 3
         print("next reveal",next_reveal)
