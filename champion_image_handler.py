@@ -1,5 +1,8 @@
 import os
+ # Currently not using in the GUI. Finds the path for the champion assets and save the path to
+ # champion_data.json
 
+ # This function iteratively goes through the Assets file to find the loadscreen png for all champs
 def find_champion_image_path(champion_name):
     assets_folder = 'Assets'
     
@@ -15,6 +18,8 @@ def find_champion_image_path(champion_name):
     print(f"Image not found for {champion_name}")
     return None
 
+# Attempts to find the specifi champion loadscreen by matching champ name and calling the
+# finding_Champion_image_path function
 def get_champion_image_paths(champion_names):
     image_paths = {}
     for name in champion_names:

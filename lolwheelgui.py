@@ -101,6 +101,7 @@ slot5 = [card_load("mystery"), "mystery"]
 # slot4
 # slot5
 
+# All the input fields currently
 input_layout = [    [sg.Text("Summoner Name: "), sg.InputText(key='-GAME_NAME-')],
                     [sg.Text("Tag Line"), sg.InputText(key='-TAG_LINE-')],
                     [sg.Text("Select Role"), sg.Combo(['Top','Jungle','Mid','Bot','Support'], default_value='Top', key = '-ROLE-')],

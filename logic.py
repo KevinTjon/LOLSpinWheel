@@ -2,8 +2,8 @@ from mastery_lookup import get_summoner_puuid, get_mastery_score
 from champion_lookup import get_champion_name, player_champion_list
 
 def main(game_name,tag_line,role):
-    game_name = game_name
-    tag_line = tag_line
+    game_name = game_name # Riot Summoner name (without the #)
+    tag_line = tag_line # Tagline after the # (eg. Na1)
     role = role.lower()
 
     
