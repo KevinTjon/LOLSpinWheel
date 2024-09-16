@@ -15,7 +15,7 @@ def get_summoner_puuid(gameName, tagLine):
     response = requests.get(url, headers=headers)
     return response.json()
 
-count = 20 # Limits the number of top champions returned
+count = 50 # Limits the number of top champions returned
 # GET TOP MASTERED CHAMPIONS limited to count
 def get_mastery_score(puuid):
     url = f'https://{REGION_1b}.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-puuid/{puuid}/top'

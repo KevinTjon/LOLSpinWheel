@@ -1,6 +1,9 @@
 import PySimpleGUI as sg
 import base64
 import json
+import random
+
+from logic import main
 
 def load_champion_data():
     #champ_list = []
@@ -15,8 +18,11 @@ def get_champ_data():
     # returns only the champ names and removes its id
     return [champ_list.get(str(champ_id), (f"Unknown Champ({champ_id})")) for champ_id in champ_list]
 
-champion_list = get_champ_data()
-print(champion_list)
+champion_list = (get_champ_data())
+
+#print(champion_list) 
+random.shuffle(champion_list)
+#print(champion_list) 
 
 #champion_list = ["aatrox","ivern"]
 
@@ -38,8 +44,13 @@ def card_load(champion_name_lowercase):
     #now image should be readable by pysimplegui
 
 
-     
-
+def update_slots(champ1,champ2,champ3,champ4,champ5):
+    
+    champ_card_base64 = card_load(champion_list[next_reveal])
+    champ_card = champion_list[next_reveal]
+    window[f"-slot{next_reveal+1}_champion_image-"].update(next_card_base64)
+    window[f"-slot{next_reveal+1}_champion_name-"].update(next_card_name)
+    
     
 # setup the five slots
 
@@ -74,8 +85,15 @@ slot5 = [card_load("mystery"), "?"]
 # slot4
 # slot5
 
+input_layout = [    [sg.Text("Summoner Name: "), sg.InputText(key='-GAME_NAME-')],
+                    [sg.Text("Tag Line"), sg.InputText(key='-TAG_LINE-')],
+                    [sg.Text("Select Role"), sg.Combo(['Top','Jungle','Mid','Bot','Support'], default_value='Top', key = '-ROLE-')],
+                    [sg.Button('Submit')]   
+                ]
+
 # All the stuff inside your window.
-layout = [  [sg.Image(slot1[0], key="-slot1_champion_image-"), sg.Image(slot2[0], key="-slot2_champion_image-"), sg.Image(slot3[0], key="-slot3_champion_image-"), sg.Image(slot4[0], key="-slot4_champion_image-"), sg.Image(slot5[0], key="-slot5_champion_image-")],
+layout = [  [sg.Column(input_layout)],
+            [sg.Image(slot1[0], key="-slot1_champion_image-"), sg.Image(slot2[0], key="-slot2_champion_image-"), sg.Image(slot3[0], key="-slot3_champion_image-"), sg.Image(slot4[0], key="-slot4_champion_image-"), sg.Image(slot5[0], key="-slot5_champion_image-")],
             [sg.Text(slot1[1] ,key='-slot1_champion_name-'), sg.Text(slot2[1] ,key='-slot2_champion_name-'), sg.Text(slot3[1] ,key='-slot3_champion_name-'), sg.Text(slot4[1] ,key='-slot4_champion_name-'), sg.Text(slot5[1] ,key='-slot5_champion_name-')],
             [sg.Button('Reveal'), sg.Button('Shuffle', key='shuffle_button')],
             [sg.Button('Ok')] ]
@@ -90,6 +108,12 @@ while True:
     event, values = window.read()
     if event == sg.WIN_CLOSED or event == 'Ok': # if user closes window or clicks cancel
         break
+    if event == 'Submit':
+        game_name = values['-GAME_NAME-']
+        tag_line = values['-TAG_LINE-']
+        role = values['-ROLE-'].lower()
+        main(game_name,tag_line,role)
+        
     if next_reveal>=2:
         window['shuffle_button'].update(visible = False)
     if event == 'shuffle_button' and next_reveal<3: # can only shuffle if see less than 3
