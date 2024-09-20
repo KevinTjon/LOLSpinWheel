@@ -2,25 +2,12 @@ import PySimpleGUI as sg
 import base64
 import json
 import random
-import os
 
+from mastery_lookup import get_summoner_puuid, get_mastery_score
+from champion_lookup import get_champion_name, player_champion_list
 from logic import main
 
 def load_champion_data():
-    # creates a default data for the slots if the json file is not found
-    default_data = {
-        "0": {
-            "name": "None",
-            "image_path": "Assets/None/skins/base/mysteryloadscreen.png"
-        }
-    }
-
-    # creates a json file if it doesn't exist
-    if not os.path.exists('champion_data.json'):
-        with open('champion_data.json', 'w') as file:
-            json.dump(default_data, file)
-        
-
     #champ_list = []
     with open('champion_data.json', 'r') as file:
         data = json.load(file)
@@ -59,41 +46,20 @@ def card_load(champion_name_lowercase):
     #now image should be readable by pysimplegui
 
 
-# takes in an array of 5 elements (champion names) ex: ["Aatrox",...]
-# updates the corresponding slots with each element
-# returns nothing
-def update_slots(sliced_champ_array):
-    if len(sliced_champ_array)>5:
-        print("sliced array greater than size 5")
-        print("Exiting...")
-        exit()
-    for slot_index in range(0,5):
+     
 
-        champ_card_base64 = card_load(sliced_champ_array[slot_index])
-        champion_name = sliced_champ_array[slot_index]
-        window[f"-slot{slot_index+1}_champion_image-"].update(champ_card_base64)
-        window[f"-slot{slot_index+1}_champion_name-"].update(champion_name)
     
-    return
-
-# makes all slots revert to mystery image and mystery name
-# takes in no parameters
-# returns nothing
-def reset_cards():
-    mystery_array = ['mystery'] *5
-    update_slots(mystery_array)
-
 # setup the five slots
 
-slot1 = [card_load("mystery"), "mystery"]
+slot1 = [card_load("mystery"), "?"]
 
-slot2 = [card_load("mystery"), "mystery"]
+slot2 = [card_load("mystery"), "?"]
 
-slot3 = [card_load("mystery"), "mystery"]
+slot3 = [card_load("mystery"), "?"]
 
-slot4 = [card_load("mystery"), "mystery"]
+slot4 = [card_load("mystery"), "?"]
 
-slot5 = [card_load("mystery"), "mystery"]
+slot5 = [card_load("mystery"), "?"]
 
 
 # slot variable:
@@ -116,13 +82,12 @@ slot5 = [card_load("mystery"), "mystery"]
 # slot4
 # slot5
 
-# All the input fields currently
 input_layout = [    [sg.Text("Summoner Name: "), sg.InputText(key='-GAME_NAME-')],
                     [sg.Text("Tag Line"), sg.InputText(key='-TAG_LINE-')],
                     [sg.Text("Select Role"), sg.Combo(['Top','Jungle','Mid','Bot','Support'], default_value='Top', key = '-ROLE-')],
                     [sg.Button('Submit')]   
                 ]
-
+    
 # All the stuff inside your window.
 layout = [  [sg.Column(input_layout)],
             [sg.Image(slot1[0], key="-slot1_champion_image-"), sg.Image(slot2[0], key="-slot2_champion_image-"), sg.Image(slot3[0], key="-slot3_champion_image-"), sg.Image(slot4[0], key="-slot4_champion_image-"), sg.Image(slot5[0], key="-slot5_champion_image-")],
@@ -134,11 +99,7 @@ layout = [  [sg.Column(input_layout)],
 
 # Create the Window
 window = sg.Window('Window Title', layout, resizable=True).Finalize()
-#window.Maximize()
 
-
-
-saved_role = "Top"
 
 next_reveal= 0
 # Event Loop to process "events" and get the "values" of the inputs
@@ -151,19 +112,16 @@ while True:
     else:
         window['Reveal'].Update(visible=True)
     if event == 'Submit':
-        reset_cards() # flips cards back to mystery state
-        
+        #reset_cards() # flips cards back to mystery state
         next_reveal = 0
         game_name = values['-GAME_NAME-']
         tag_line = values['-TAG_LINE-']
         role = values['-ROLE-'].lower()
-        main(game_name,tag_line,role)
+        main(game_name,tag_line,role) #sends it to logic.py file
         champion_list = (get_champ_data())
+        random.shuffle(champion_list)
         
         #update_slots(champion_list[0:5])
-        
-        
-        
     if next_reveal==1: # logic for showing the shuffle button
         window['shuffle_button'].update(visible = True)
     else:
